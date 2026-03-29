@@ -60,11 +60,8 @@ The decoupled nature of the architecture makes the system easily testable and al
 | :---: | :---: | :---: |
 | ![Login Light](screenshots/login_light.png) | ![Login Dark](screenshots/login_dark.png) | ![Login Landscape](screenshots/login_landscape.png) |
 
-| Biometric Verify | Biometric Prompt | Biometric Required |
-| :---: | :---: | :---: |
-| ![Biometric Verify](screenshots/biometric_verify.png) | ![Biometric Prompt](screenshots/biometric_prompt.png) | ![Biometric Required](screenshots/biometric_required.png) |
+| Biometric Verify | Biometric Required | Success Screen | Root Detected |
+| :---: | :---: | :---: | :---: |
+| ![Biometric Verify](screenshots/biometric_verify.png) | ![Biometric Required](screenshots/biometric_required.png) | ![Success](screenshots/success.png) | ![Root Detected](screenshots/root_detected.png) |
 
-| Success Screen | Root Detected |
-| :---: | :---: |
-| ![Success](screenshots/success.png) | ![Root Detected](screenshots/root_detected.png) |
 ---
