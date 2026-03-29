@@ -5,6 +5,7 @@
     <string name="common_ok">OK</string>
     <string name="common_cancel">Cancel</string>
     <string name="common_or">or</string>
+    <string name="common_loading">Loading</string>
 
     <string name="login_failed">Sign in failed</string>
     <string name="login_sign_in">Sign in</string>

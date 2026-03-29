@@ -27,6 +27,8 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -129,7 +131,7 @@ fun LoginScreen(
 }
 
 @Composable
-private fun LoginContent(
+internal fun LoginContent(
     state: LoginUiModel,
     onIntent: (LoginIntent) -> Unit,
 ) {
@@ -272,6 +274,7 @@ private fun LoginContent(
                     }
 
                     // Sign in button
+                    val loginButtonLabel = stringResource(R.string.login_sign_in)
                     Button(
                         onClick = { onIntent(LoginIntent.LoginClicked) },
                         modifier = Modifier
@@ -281,14 +284,17 @@ private fun LoginContent(
                         shape = MaterialTheme.shapes.medium,
                     ) {
                         if (isLoading) {
+                            val loadingLabel = stringResource(R.string.common_loading)
                             CircularProgressIndicator(
-                                modifier = Modifier.size(20.dp),
+                                modifier = Modifier
+                                    .size(20.dp)
+                                    .semantics { contentDescription = loadingLabel },
                                 strokeWidth = 2.dp,
                                 color = MaterialTheme.colorScheme.onPrimary,
                             )
                         } else {
                             Text(
-                                stringResource(R.string.login_sign_in),
+                                loginButtonLabel,
                                 style = MaterialTheme.typography.labelLarge
                             )
                         }
