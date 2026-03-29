@@ -27,20 +27,24 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.ahmadkaddour.securebiometricvault.R
 import com.ahmadkaddour.securebiometricvault.core.presentation.theme.AppTheme
+import com.ahmadkaddour.securebiometricvault.core.security.root.RootDetector
 import com.ahmadkaddour.securebiometricvault.feature.auth.presentation.biometric.BiometricScreen
 import com.ahmadkaddour.securebiometricvault.feature.auth.presentation.login.LoginScreen
+import org.koin.android.ext.android.inject
 
 
 class MainActivity : FragmentActivity() {
 
+    private val rootDetector: RootDetector by inject()
+    private var isRooted by mutableStateOf(false)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        checkRoot()
 
         setContent {
             AppTheme {
-                val isRooted = false
-
                 if (isRooted) {
                     RootedDeviceScreen()
                 } else {
@@ -48,6 +52,15 @@ class MainActivity : FragmentActivity() {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        checkRoot()
+    }
+
+    private fun checkRoot() {
+        isRooted = rootDetector.isRooted()
     }
 }
 

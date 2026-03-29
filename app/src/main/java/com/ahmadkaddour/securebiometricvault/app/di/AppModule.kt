@@ -16,6 +16,8 @@ import com.ahmadkaddour.securebiometricvault.core.data.storage.secure.SecureAppC
 import com.ahmadkaddour.securebiometricvault.core.di.InstanceNames
 import com.ahmadkaddour.securebiometricvault.core.security.cipher.StringCipher
 import com.ahmadkaddour.securebiometricvault.core.security.cipher.aes.AesGcmKeyStoreStringCipher
+import com.ahmadkaddour.securebiometricvault.core.security.root.RootDetector
+import com.ahmadkaddour.securebiometricvault.core.security.root.rootbeer.RootBeerRootDetector
 import io.ktor.client.engine.okhttp.OkHttp
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
@@ -40,6 +42,8 @@ val appModule = module {
             ),
         )
     }
+
+    factory<RootDetector> { RootBeerRootDetector(androidContext()) }
 
     single<PreferenceDataStoreManager> {
         DefaultPreferenceDataStoreManager(
