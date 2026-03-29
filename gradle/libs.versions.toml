@@ -19,6 +19,7 @@ datastore = "1.2.1"
 biometric = "1.1.0"
 koin-bom = "4.2.0"
 rootbeer = "0.1.2"
+mockk = "1.14.9"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -60,7 +61,9 @@ koin-android = { group = "io.insert-koin", name = "koin-android" }
 koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose"}
 
 rootbeer = { group = "com.scottyab", name = "rootbeer-lib", version.ref = "rootbeer" }
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
