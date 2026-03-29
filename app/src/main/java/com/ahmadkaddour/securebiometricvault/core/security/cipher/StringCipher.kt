@@ -1,4 +1,4 @@
-package com.ahmadkaddour.securebiometricvault.core.security
+package com.ahmadkaddour.securebiometricvault.core.security.cipher
 
 /**
  * Encrypts and decrypts strings.

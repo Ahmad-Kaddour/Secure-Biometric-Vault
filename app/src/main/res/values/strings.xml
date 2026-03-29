@@ -1,3 +1,47 @@
 <resources>
     <string name="app_name">Secure Biometric Vault</string>
+    <string name="app_name_short">MASARI</string>
+
+    <string name="common_ok">OK</string>
+    <string name="common_cancel">Cancel</string>
+    <string name="common_or">or</string>
+
+    <string name="login_failed">Sign in failed</string>
+    <string name="login_sign_in">Sign in</string>
+    <string name="login_welcome_back">Welcome back to MASARI</string>
+    <string name="login_username_label">Username</string>
+    <string name="login_password_label">Password</string>
+    <string name="login_hide_password">Hide password</string>
+    <string name="login_show_password">Show password</string>
+    <string name="login_forgot_password">Forgot password?</string>
+    <string name="login_security_footer">Protected by 256-bit AES encryption and Android Keystore</string>
+    <string name="login_logo_description">MASARI logo</string>
+    <string name="login_brand_subtitle">Secure Banking</string>
+    <string name="login_biometric_hint">Biometric sign in available on the next screen</string>
+
+    <string name="biometric_auth_failed">Authentication failed</string>
+    <string name="biometric_try_again">Try again</string>
+    <string name="biometric_use_password">Use password</string>
+    <string name="biometric_verify_identity">Verify your identity</string>
+    <string name="biometric_description">Use your biometric to securely access your account</string>
+    <string name="biometric_waiting">Waiting for biometric…</string>
+    <string name="biometric_tap_to_authenticate">Tap to authenticate</string>
+    <string name="biometric_sign_in_password">Sign in with password</string>
+    <string name="biometric_secured_by">Secured by Android Keystore</string>
+    <string name="biometric_accessibility_fingerprint">Authenticate with biometrics</string>
+
+    <string name="home_sign_out">Sign out</string>
+    <string name="home_welcome">Welcome to MASARI</string>
+    <string name="home_auth_success">Authentication successful</string>
+
+    <string name="root_detection_title">Security Risk Detected</string>
+    <string name="root_detection_message">MASARI cannot run on a rooted device. Your financial data and biometric credentials require a secure, unmodified Android environment.</string>
+    <string name="root_detection_error_code">Error code: MASARI-SEC-001\nRoot access detected</string>
+
+    <string name="login_biometric_required_title">Biometric Required</string>
+    <string name="login_biometric_required_message">
+    This app requires biometric authentication to access your account.
+    Please enable fingerprint or face unlock in your device settings to continue.
+</string>
+    <string name="login_biometric_open_settings">Open Settings</string>
 </resources>

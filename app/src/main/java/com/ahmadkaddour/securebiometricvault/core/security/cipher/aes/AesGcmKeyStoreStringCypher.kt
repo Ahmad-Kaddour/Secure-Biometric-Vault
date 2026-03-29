@@ -1,9 +1,9 @@
-package com.ahmadkaddour.securebiometricvault.core.security.aes
+package com.ahmadkaddour.securebiometricvault.core.security.cipher.aes
 
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.util.Base64
-import com.ahmadkaddour.securebiometricvault.core.security.StringCipher
+import com.ahmadkaddour.securebiometricvault.core.security.cipher.StringCipher
 import java.security.KeyStore
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator

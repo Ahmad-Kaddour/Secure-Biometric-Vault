@@ -2,7 +2,7 @@ package com.ahmadkaddour.securebiometricvault.core.data.storage.secure
 
 import com.ahmadkaddour.securebiometricvault.core.data.mapper.JsonMapper
 import com.ahmadkaddour.securebiometricvault.core.data.storage.AppCache
-import com.ahmadkaddour.securebiometricvault.core.security.StringCipher
+import com.ahmadkaddour.securebiometricvault.core.security.cipher.StringCipher
 import kotlin.reflect.KClass
 
 /**

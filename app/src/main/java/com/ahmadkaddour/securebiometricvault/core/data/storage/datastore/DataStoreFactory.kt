@@ -5,7 +5,7 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import okio.Path.Companion.toPath
 
-const val DATA_STORE_FILE_NAME = "preferences.pb"
+const val DATA_STORE_FILE_NAME = "preferences.preferences_pb"
 
 object DataStoreFactory {
     fun create(pathFactory: DataStorePathProvider): DataStore<Preferences> =

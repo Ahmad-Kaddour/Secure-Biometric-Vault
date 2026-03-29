@@ -3,7 +3,7 @@ package com.ahmadkaddour.securebiometricvault.core.domain
 /**
  * Base type for all domain-level errors.
  */
-sealed class AppError(open val message: String)
+open class AppError(open val message: String)
 
 
 sealed class RemoteError(override val message: String) : AppError(message) {
@@ -30,3 +30,14 @@ data class ExceptionError(
     val throwable: Throwable,
     override val message: String = throwable.message ?: "An unexpected error occurred.",
 ) : AppError(message)
+
+sealed class AuthError(override val message: String) : AppError(message) {
+    data object InvalidCredentials : AuthError("Invalid username or password.")
+    data object BiometricNotEnrolled : AuthError("Please enrol biometrics in device settings.")
+    data object BiometricHardwareUnavailable : AuthError("Biometric hardware is not available on this device.")
+    data object BiometricLockout : AuthError("Too many attempts. Biometrics are temporarily locked.")
+    data object BiometricAuthFailed : AuthError("Biometric authentication failed.")
+    data object TokenNotFound : AuthError("No access token found. Please log in.")
+    data object SessionExpired : AuthError("Your session has expired. Please log in again.")
+    data object RootedDevice : AuthError("This device is rooted. The app cannot run for security reasons.")
+}
