@@ -173,7 +173,11 @@ private fun LoginContent(
 
             // Card containing form fields
             ElevatedCard(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .windowInsetsPadding(
+                        WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal)
+                    ),
                 shape = MaterialTheme.shapes.large,
                 elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
             ) {
@@ -231,7 +235,9 @@ private fun LoginContent(
                                     imageVector = if (state.passwordVisible)
                                         Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility,
                                     contentDescription = if (state.passwordVisible)
-                                        stringResource(R.string.login_hide_password) else stringResource(R.string.login_show_password),
+                                        stringResource(R.string.login_hide_password) else stringResource(
+                                        R.string.login_show_password
+                                    ),
                                 )
                             }
                         },
@@ -277,7 +283,10 @@ private fun LoginContent(
                                 color = MaterialTheme.colorScheme.onPrimary,
                             )
                         } else {
-                            Text(stringResource(R.string.login_sign_in), style = MaterialTheme.typography.labelLarge)
+                            Text(
+                                stringResource(R.string.login_sign_in),
+                                style = MaterialTheme.typography.labelLarge
+                            )
                         }
                     }
 
