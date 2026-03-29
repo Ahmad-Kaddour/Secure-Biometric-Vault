@@ -7,10 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahmadkaddour.securebiometricvault.R
 import com.ahmadkaddour.securebiometricvault.core.domain.AuthError
-import com.ahmadkaddour.securebiometricvault.core.domain.Success
+import com.ahmadkaddour.securebiometricvault.core.exception.ExceptionHandler
 import com.ahmadkaddour.securebiometricvault.core.security.biometric.android.AndroidBiometricAvailabilityChecker
 import com.ahmadkaddour.securebiometricvault.core.presentation.state.UiState
-import com.ahmadkaddour.securebiometricvault.core.presentation.state.toUiState
+import com.ahmadkaddour.securebiometricvault.core.presentation.viewmodel.ViewModelErrorHandler
+import com.ahmadkaddour.securebiometricvault.core.presentation.viewmodel.ViewModelErrorHandlerDelegate
 import com.ahmadkaddour.securebiometricvault.feature.auth.domain.usecase.CheckBiometricAvailabilityUseCase
 import com.ahmadkaddour.securebiometricvault.feature.auth.domain.usecase.GetStoredTokenUseCase
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -23,9 +24,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class BiometricViewModel(
+    val exceptionHandler: ExceptionHandler,
     private val getStoredTokenUseCase: GetStoredTokenUseCase,
     private val checkBiometricAvailabilityUseCase: CheckBiometricAvailabilityUseCase,
-) : ViewModel() {
+) : ViewModel(), ViewModelErrorHandler by ViewModelErrorHandlerDelegate(exceptionHandler) {
 
     private val _state = MutableStateFlow(BiometricUiModel())
     val state: StateFlow<BiometricUiModel> = _state.asStateFlow()
@@ -47,8 +49,11 @@ class BiometricViewModel(
     private fun checkBiometricAvailability() {
         viewModelScope.launch {
             reduce { copy(biometricCheckState = UiState.Loading) }
-            val result = checkBiometricAvailabilityUseCase()
-            reduce { copy(biometricCheckState = result.toUiState()) }
+            handleResult(
+                execute = { checkBiometricAvailabilityUseCase() },
+                onSuccess = { reduce { copy(biometricCheckState = UiState.Success(Unit)) } },
+                onError = { reduce { copy(biometricCheckState = UiState.Failure(it)) } },
+            )
         }
     }
 
@@ -60,11 +65,14 @@ class BiometricViewModel(
 
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                 viewModelScope.launch {
-                    val tokenResult = getStoredTokenUseCase()
-                    reduce { copy(authState = tokenResult.toUiState()) }
-                    if (tokenResult is Success) {
-                        _effects.emit(BiometricEffect.NavigateToHome)
-                    }
+                    handleResult(
+                        execute = { getStoredTokenUseCase() },
+                        onSuccess = {
+                            reduce { copy(authState = UiState.Success(it)) }
+                            emitEffect(BiometricEffect.NavigateToHome)
+                        },
+                        onError = { reduce { copy(authState = UiState.Failure(it)) } },
+                    )
                 }
             }
 
@@ -100,5 +108,9 @@ class BiometricViewModel(
 
     private fun reduce(block: BiometricUiModel.() -> BiometricUiModel) {
         _state.update { it.block() }
+    }
+
+    private fun emitEffect(effect: BiometricEffect) {
+        launch(viewModelScope) { _effects.emit(effect) }
     }
 }

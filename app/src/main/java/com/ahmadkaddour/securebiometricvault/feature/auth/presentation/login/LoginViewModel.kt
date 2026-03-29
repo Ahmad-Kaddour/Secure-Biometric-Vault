@@ -3,10 +3,11 @@ package com.ahmadkaddour.securebiometricvault.feature.auth.presentation.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahmadkaddour.securebiometricvault.core.domain.AuthError
-import com.ahmadkaddour.securebiometricvault.core.domain.ExceptionError
 import com.ahmadkaddour.securebiometricvault.core.domain.Success
+import com.ahmadkaddour.securebiometricvault.core.exception.ExceptionHandler
 import com.ahmadkaddour.securebiometricvault.core.presentation.state.UiState
-import com.ahmadkaddour.securebiometricvault.core.presentation.state.toUiState
+import com.ahmadkaddour.securebiometricvault.core.presentation.viewmodel.ViewModelErrorHandler
+import com.ahmadkaddour.securebiometricvault.core.presentation.viewmodel.ViewModelErrorHandlerDelegate
 import com.ahmadkaddour.securebiometricvault.feature.auth.domain.usecase.CheckBiometricAvailabilityUseCase
 import com.ahmadkaddour.securebiometricvault.feature.auth.domain.usecase.HasValidSessionUseCase
 import com.ahmadkaddour.securebiometricvault.feature.auth.domain.usecase.LoginUseCase
@@ -20,10 +21,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
+    private val exceptionHandler: ExceptionHandler,
     private val loginUseCase: LoginUseCase,
     private val hasValidSessionUseCase: HasValidSessionUseCase,
     private val checkBiometricAvailabilityUseCase: CheckBiometricAvailabilityUseCase,
-) : ViewModel() {
+) : ViewModel(), ViewModelErrorHandler by ViewModelErrorHandlerDelegate(exceptionHandler) {
 
     private val _state = MutableStateFlow(LoginUiModel())
     val state: StateFlow<LoginUiModel> = _state.asStateFlow()
@@ -49,18 +51,19 @@ class LoginViewModel(
 
     fun onResume() {
         if (!_state.value.showBiometricDisabledBlock) return
-
         viewModelScope.launch {
-            val biometricResult = checkBiometricAvailabilityUseCase()
-            if (biometricResult is Success) {
-                reduce { copy(showBiometricDisabledBlock = false, biometricAvailable = true) }
-                emitEffect(LoginEffect.NavigateToBiometric)
-            }
+            handleResult(
+                execute = { checkBiometricAvailabilityUseCase() },
+                onSuccess = {
+                    reduce { copy(showBiometricDisabledBlock = false, biometricAvailable = true) }
+                    emitEffect(LoginEffect.NavigateToBiometric)
+                },
+            )
         }
     }
 
     private fun checkInitialState() {
-        viewModelScope.launch {
+        launch(viewModelScope) {
             val hasSession = hasValidSessionUseCase()
             val biometricResult = checkBiometricAvailabilityUseCase()
 
@@ -83,33 +86,29 @@ class LoginViewModel(
 
     private fun handleLogin() {
         val current = _state.value
-
         if (current.username.isBlank() || current.password.isBlank()) {
-            emitEffect(LoginEffect.ShowError(
-                AuthError.InvalidCredentials
-            ))
+            emitEffect(LoginEffect.ShowError(AuthError.InvalidCredentials))
             return
         }
 
         viewModelScope.launch {
             reduce { copy(loginState = UiState.Loading) }
-            try {
-                val result = loginUseCase(
-                    username = current.username,
-                    password = current.password
-                )
-                val newState = result.toUiState()
-                reduce { copy(loginState = newState) }
-                if (newState is UiState.Success) {
+            handleResult(
+                execute = {
+                    loginUseCase(
+                        username = current.username,
+                        password = current.password
+                    )
+                },
+                onSuccess = {
+                    reduce { copy(loginState = UiState.Success(Unit)) }
                     emitEffect(LoginEffect.NavigateToHome)
-                } else if (newState is UiState.Failure) {
-                    emitEffect(LoginEffect.ShowError(newState.error))
-                }
-            } catch (e: Exception) {
-                val error = ExceptionError(e)
-                reduce { copy(loginState = UiState.Failure(error)) }
-                emitEffect(LoginEffect.ShowError(error))
-            }
+                },
+                onError = { error ->
+                    reduce { copy(loginState = UiState.Failure(error)) }
+                    emitEffect(LoginEffect.ShowError(error))
+                },
+            )
         }
     }
 
@@ -118,6 +117,6 @@ class LoginViewModel(
     }
 
     private fun emitEffect(effect: LoginEffect) {
-        viewModelScope.launch { _effects.emit(effect) }
+        launch(viewModelScope) { _effects.emit(effect) }
     }
 }

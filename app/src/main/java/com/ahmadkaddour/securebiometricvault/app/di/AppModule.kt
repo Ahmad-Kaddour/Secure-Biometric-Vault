@@ -14,6 +14,8 @@ import com.ahmadkaddour.securebiometricvault.core.data.storage.datastore.Default
 import com.ahmadkaddour.securebiometricvault.core.data.storage.datastore.PreferenceDataStoreManager
 import com.ahmadkaddour.securebiometricvault.core.data.storage.secure.SecureAppCache
 import com.ahmadkaddour.securebiometricvault.core.di.InstanceNames
+import com.ahmadkaddour.securebiometricvault.core.exception.ExceptionHandler
+import com.ahmadkaddour.securebiometricvault.core.exception.MockExceptionHandler
 import com.ahmadkaddour.securebiometricvault.core.security.cipher.StringCipher
 import com.ahmadkaddour.securebiometricvault.core.security.cipher.aes.AesGcmKeyStoreStringCipher
 import com.ahmadkaddour.securebiometricvault.core.security.root.RootDetector
@@ -56,4 +58,6 @@ val appModule = module {
     single<AppCache>(named(InstanceNames.SECURE_APP_CACHE_INSTANCE_NAME)) {
         SecureAppCache(get(), get(), get())
     }
+
+    single<ExceptionHandler> { MockExceptionHandler() }
 }

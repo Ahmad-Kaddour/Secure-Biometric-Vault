@@ -34,6 +34,6 @@ val authModule = module {
     factory { GetStoredTokenUseCase(get()) }
     factory { CheckBiometricAvailabilityUseCase(get()) }
 
-    viewModel { LoginViewModel(get(), get(), get()) }
-    viewModel { BiometricViewModel(get(), get()) }
+    viewModel { LoginViewModel(get(), get(), get(), get()) }
+    viewModel { BiometricViewModel(get(), get(), get()) }
 }
